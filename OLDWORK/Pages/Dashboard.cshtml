@@ -1,0 +1,107 @@
+@page
+@model PatientPortalApp.Pages.DashboardModel
+@using System.Text.Json
+@{
+    Layout = null;
+    ViewData["Title"] = "Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Patient Portal</title>
+
+    <link href="https://cdn.syncfusion.com/ej2/23.2.4/material.css" rel="stylesheet" />
+    <script src="https://cdn.syncfusion.com/ej2/23.2.4/dist/ej2.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding-top: 30px;
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #24364b;
+        }
+
+        header {
+            background-color: #2ecc71;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+
+        header img {
+            height: 42px;
+            width: auto;
+            margin-right: 14px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            margin: 0 0 18px 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        #Grid {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="/images/logo.png" alt="App Logo" />
+        <h1>BRIOTA Patient Portal</h1>
+    </header>
+
+    <div class="container">
+        <h2 class="page-title">Patient List</h2>
+        <div id="Grid"></div>
+    </div>
+
+    <script>
+        var patients = @Html.Raw(JsonSerializer.Serialize(Model.Patients));
+
+        var grid = new ej.grids.Grid({
+            dataSource: patients,
+            allowPaging: true,
+            allowSorting: true,
+            allowTextWrap: true,
+            allowExcelExport: true,
+            allowPdfExport: true,
+            toolbar: ["Search", "ExcelExport", "PdfExport", "Print"],
+            pageSettings: { pageSize: 10 },
+            columns: [
+                { field: "Id", headerText: "Patient ID", width: 100, textAlign: "Center" },
+                { field: "Name", headerText: "Name", width: 170 },
+                { field: "DateOfEntry", headerText: "Date of Entry", width: 160, type: "date", format: "yMd" },
+                {
+                    headerText: "Report",
+                    textAlign: "Center",
+                    width: 150,
+                    template: "<a href='/Report?patientId=${Id}'>View Report</a>"
+                }
+            ]
+        });
+
+        grid.appendTo("#Grid");
+    </script>
+</body>
+</html>

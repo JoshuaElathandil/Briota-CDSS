@@ -1,0 +1,84 @@
+@page
+@model Briota.CDSS.Pages.TestDbModel
+@{
+    ViewData["Title"] = "Database Diagnostic";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white p-4">
+                    <h3 class="mb-0">EF Core Proof-of-Life</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="me-3">
+                            @if (Model.CanConnect)
+                            {
+                                <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-x-circle-fill text-danger fs-1"></i>
+                            }
+                        </div>
+                        <div>
+                            <h4 class="mb-0">Connection Status</h4>
+                            <p class="text-muted mb-0">Testing: SecurityDB_06June on localdb</p>
+                        </div>
+                    </div>
+
+                    @if (Model.CanConnect)
+                    {
+                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <div>Connection to SQL Server Established Successfully.</div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3">Table Metadata (Record Counts)</h5>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Patients
+                                <span class="badge bg-primary rounded-pill">@Model.PatientCount</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                CKD Clinical Records
+                                <span class="badge bg-primary rounded-pill">@Model.CkdCount</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                COPD Clinical Records
+                                <span class="badge bg-primary rounded-pill">@Model.CopdCount</span>
+                            </li>
+                        </ul>
+
+                        <h5 class="mt-4 mb-3">RBAC: Registered Roles</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            @if (Model.Roles != null && Model.Roles.Any())
+                            {
+                                foreach (var role in Model.Roles)
+                                {
+                                    <span class="badge bg-secondary p-2">@role</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">No roles found in AspNetRoles.</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Connection Failed</h4>
+                            <p>Could not connect to the local SQL Server instance. Check your LocalDB status and the connection string in <code>appsettings.json</code>.</p>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer bg-light p-3 text-center">
+                    <a asp-page="/Patients/Index" class="btn btn-outline-primary">Return to Directory</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

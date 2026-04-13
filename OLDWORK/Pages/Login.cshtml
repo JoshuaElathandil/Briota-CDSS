@@ -1,0 +1,213 @@
+@page
+@model PatientPortalApp.Pages.LoginModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Briota Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Helvetica Neue", sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background: #f3f8fb;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .left-panel {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .right-panel {
+            flex: 1;
+            background: linear-gradient(to bottom, #b8e0f4, #d0f0f9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            padding: 34px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            display: block;
+            width: 150px;
+            margin: 0 auto 18px auto;
+        }
+
+        h2 {
+            margin: 0 0 22px 0;
+            text-align: center;
+            color: #24364b;
+            font-size: 1.8rem;
+        }
+
+        .error {
+            color: #b00020;
+            text-align: center;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #b9c7d3;
+            border-radius: 10px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 1rem;
+            background: #fff;
+        }
+
+        input:focus {
+            border-color: #5aa9e6;
+            box-shadow: 0 0 0 3px rgba(90, 169, 230, 0.18);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667;
+            cursor: pointer;
+        }
+
+        .captcha {
+            display: flex;
+            align-items: center;
+            margin: 14px 0;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0 16px 0;
+            font-size: 0.92rem;
+        }
+
+        .options a {
+            text-decoration: none;
+            color: #2b6cb0;
+        }
+
+        .options a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0b8f4e;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #066b3a;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 16px;
+            color: #2b6cb0;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="left-panel">
+            <img src="/images/background.png" alt="Doctor Image" />
+        </div>
+
+        <div class="right-panel">
+            <div class="login-card">
+                <img src="/images/logo.png" alt="Briota Logo" class="logo" />
+                <h2>Sign In</h2>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="error">@Model.ErrorMessage</div>
+                }
+
+                <form method="post">
+                    <div class="field">
+                        <input type="email" name="Email" placeholder="Email" required />
+                    </div>
+
+                    <div class="field password-wrapper">
+                        <input type="password" name="Password" placeholder="Password" required />
+                        <i class="fas fa-eye"></i>
+                    </div>
+
+                    <div class="captcha">
+                        <input type="checkbox" id="captcha" />
+                        <label for="captcha">I'm not a robot</label>
+                    </div>
+
+                    <div class="options">
+                        <label><input type="checkbox" /> Remember me</label>
+                        <a href="#">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit">LOG IN</button>
+                    <p class="signup">Sign Up</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

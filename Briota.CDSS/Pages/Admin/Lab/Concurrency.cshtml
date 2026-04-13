@@ -1,0 +1,152 @@
+@page
+@model Briota.CDSS.Pages.Admin.Lab.ConcurrencyModel
+@{
+    ViewData["Title"] = "Clinical Concurrency Laboratory";
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 fw-bold"><i class="bi bi-shield-check me-2 text-success"></i>Concurrency Lab</h1>
+            <p class="text-muted mb-0 small">Demonstrating real-world "Last-In-Wins" data loss vs. Hardened OCC protection.</p>
+        </div>
+        <div class="col-auto">
+            <a asp-page="/Admin/LabHub" class="btn btn-outline-secondary rounded-pill btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Lab Hub
+            </a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Status))
+    {
+        <div class="alert @(Model.IsConflict ? "alert-danger border-danger" : "alert-success border-success") border-2 shadow-sm rounded-3 mb-4 animate__animated animate__shakeX">
+            <div class="d-flex align-items-center">
+                <i class="bi @(Model.IsConflict ? "bi-shield-exclamation text-danger" : "bi-check-circle-fill text-success") fs-3 me-3"></i>
+                <div>
+                    <h6 class="fw-bold mb-1">Transaction Result</h6>
+                    <p class="mb-0 small">@Model.Status</p>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- Control Panel -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 bg-dark text-white p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="fw-bold mb-1 text-warning"><i class="bi bi-gear-wide-connected me-2"></i>Global Lab Constraint</h5>
+                        <p class="mb-0 text-white-50 small">Defining how the database handles simultaneous clinical updates.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn-group w-100" role="group">
+                            <a href="?Mode=Tier0" class="btn btn-outline-danger @(Model.Mode == "Tier0" ? "active" : "")">
+                                <i class="bi bi-unlock-fill me-1"></i> TIER 0: Baseline (Implicit Trust)
+                            </a>
+                            
+                            <a href="?Mode=Tier1" class="btn btn-outline-success @(Model.Mode == "Tier1" ? "active" : "")">
+                                <i class="bi bi-lock-fill me-1"></i> TIER 1: Production (OCC Enforced)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal A -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 border-top border-primary border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <h6 class="fw-bold text-primary"><i class="bi bi-pc-display me-2"></i>Terminal A: Dr. Alpha</h6>
+                        <div class="text-end">
+                            <span class="badge bg-light text-muted d-block small mb-1">ID: @(Model.ProvidedStampA?.Substring(0, Math.Min(8, Model.ProvidedStampA.Length)) ?? "N/A")</span>
+                            @if (Model.Patient != null && Model.ProvidedStampA == Model.Patient.ConcurrencyStamp)
+                            {
+                                <span class="badge bg-success-soft text-success x-small"><i class="bi bi-check-circle-fill me-1"></i>VERSION CURRENT</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger-soft text-danger x-small"><i class="bi bi-exclamation-triangle-fill me-1"></i>VERSION STALE</span>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.Patient != null)
+                    {
+                        <div class="bg-light p-3 rounded-3 mb-4">
+                            <p class="small text-muted mb-1">Database version: <strong>@(Model.Patient.ConcurrencyStamp?.Substring(0, 8))</strong></p>
+                            <p class="mb-0 fw-bold">"@Model.Patient.Symptoms"</p>
+                        </div>
+                    }
+                    <form method="post" asp-page-handler="Save" asp-route-terminal="A">
+                        <input type="hidden" name="Mode" value="@Model.Mode" />
+                        <input type="hidden" asp-for="ProvidedStampA" />
+                        <input type="hidden" asp-for="ProvidedStampB" />
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Propose Clinical Change</label>
+                            <textarea asp-for="TargetSymptoms" class="form-control" rows="3">Patient stable after morning rounds.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold">Terminal A: Save Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal B -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100 border-top border-info border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                        <h6 class="fw-bold text-info"><i class="bi bi-pc-display me-2"></i>Terminal B: Nurse Beta</h6>
+                        <div class="text-end">
+                            <span class="badge bg-light text-muted d-block small mb-1">ID: @(Model.ProvidedStampB?.Substring(0, Math.Min(8, Model.ProvidedStampB.Length)) ?? "N/A")</span>
+                            @if (Model.Patient != null && Model.ProvidedStampB == Model.Patient.ConcurrencyStamp)
+                            {
+                                <span class="badge bg-success-soft text-success x-small"><i class="bi bi-check-circle-fill me-1"></i>VERSION CURRENT</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger-soft text-danger x-small"><i class="bi bi-exclamation-triangle-fill me-1"></i>VERSION STALE</span>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.Patient != null)
+                    {
+                        <div class="bg-light p-3 rounded-3 mb-4">
+                            <p class="small text-muted mb-1">Database version: <strong>@(Model.Patient.ConcurrencyStamp?.Substring(0, 8))</strong></p>
+                            <p class="mb-0 fw-bold">"@Model.Patient.Symptoms"</p>
+                        </div>
+                    }
+                    <form method="post" asp-page-handler="Save" asp-route-terminal="B">
+                        <input type="hidden" name="Mode" value="@Model.Mode" />
+                        <input type="hidden" asp-for="ProvidedStampA" />
+                        <input type="hidden" asp-for="ProvidedStampB" />
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Propose Overlapping Change</label>
+                            <textarea asp-for="TargetSymptoms" class="form-control" rows="3">ALERT: Sudden blood pressure spike detected!</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-info w-100 rounded-pill fw-bold text-white">Terminal B: Save Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Scenario Narration -->
+    <div class="mt-5 bg-light p-4 rounded-4 border">
+        <h6 class="fw-bold mb-3"><i class="bi bi-journal-text me-2"></i>Trial Sequence Guide:</h6>
+        <ol class="small text-muted">
+            <li class="mb-2"><strong>The Setup</strong>: Notice that both Dr. Alpha and Nurse Beta see the same original symptoms.</li>
+            <li class="mb-2"><strong>The Race</strong>: Toggle to <strong>Tier 0 Baseline</strong>. Click "Save" on Terminal A, then quickly click "Save" on Terminal B. Observe how Terminal B silently overwrites Terminal A's clinical record.</li>
+            <li class="mb-2"><strong>The Resolution</strong>: Toggle to <strong>Tier 1 Hardened</strong>. Repeat the race. Observe how the system **detects the conflict** and blocks the second save, protecting Dr. Alpha's work.</li>
+        </ol>
+    </div>
+</div>
+
+<style>
+    .bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); }
+    .x-small { font-size: 0.65rem; }
+</style>

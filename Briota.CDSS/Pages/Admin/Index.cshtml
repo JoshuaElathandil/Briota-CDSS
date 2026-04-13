@@ -1,0 +1,117 @@
+@page
+@model Briota.CDSS.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Admin Management Console";
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="row align-items-center mb-4">
+        <div class="col-auto">
+            <div class="bg-danger text-white p-3 rounded-3 shadow-sm">
+                <i class="bi bi-shield-lock fs-2"></i>
+            </div>
+        </div>
+        <div class="col">
+            <h1 class="h3 mb-0 fw-bold">System Administration</h1>
+            <p class="text-muted mb-0">Identity & Center Access Management</p>
+        </div>
+        <div class="col-auto">
+            <a asp-page="/Index" class="btn btn-outline-secondary rounded-pill">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-info border-0 shadow-sm rounded-3 mb-4">
+        <div class="d-flex">
+            <div class="me-3">
+                <i class="bi bi-info-circle-fill fs-4 text-info"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">RBAC Enforcement Active</h6>
+                <p class="mb-0 small text-muted">This page is protected by the <code>[Authorize(Roles = "Admin")]</code> policy. Only accounts with System Admin privileges can view this secure console.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Center Management -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-building me-2 text-danger"></i>Clinical Centers</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle small">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Center ID</th>
+                                <th>Name</th>
+                                <th>Active Records</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-light text-dark">101</span></td>
+                                <td><strong>Mumbai Primary Clinic</strong></td>
+                                <td>15,402</td>
+                                <td><span class="badge bg-success-soft text-success">Online</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-light text-dark">102</span></td>
+                                <td><strong>Pune Diagnostic Center</strong></td>
+                                <td>8,089</td>
+                                <td><span class="badge bg-success-soft text-success">Online</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Logs -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-graph-up-arrow me-2 text-danger"></i>System Performance</h5>
+                <div class="mb-3">
+                    <label class="small text-muted mb-1">SQL Query Latency (Average)</label>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 12%" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="small text-end mt-1 mb-0 text-muted">12ms / 180s timeout</p>
+                </div>
+                <div class="bg-light p-3 rounded-3 mt-auto">
+                    <p class="mb-1 fw-bold small text-muted text-uppercase">Recent Security Events</p>
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2 text-success"><i class="bi bi-check-circle-fill me-2"></i> Global Query Filter enforced on 23,491 records</li>
+                        <li class="mb-2 text-info"><i class="bi bi-info-circle-fill me-2"></i> Admin session initiated by dev@briota.com</li>
+                        <li class="text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i> 14 Concurrency conflicts detected & blocked</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinical UX Laboratories -->
+        <div class="col-md-12 mt-4">
+            <div class="card border-0 shadow-sm p-4 card-hover overflow-hidden rounded-4" style="background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-flask-fill fs-4 text-primary me-2"></i>
+                            <h5 class="fw-bold mb-0">Clinical UX Performance Laboratories</h5>
+                        </div>
+                        <p class="small text-muted mb-0">Execute authentic side-by-side experiments between Tier 0 Baseline and Tier 1 Hardened system archetypes.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a asp-page="/Admin/LabHub" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                            Enter Lab Hub <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+</style>

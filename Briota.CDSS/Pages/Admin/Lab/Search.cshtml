@@ -1,0 +1,125 @@
+@page
+@model Briota.CDSS.Pages.Admin.Lab.SearchModel
+@{
+    ViewData["Title"] = "Search Performance Laboratory";
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 fw-bold"><i class="bi bi-lightning-charge me-2 text-warning"></i>Search Performance Lab</h1>
+            <p class="text-muted mb-0 small">Observe the actual execution gap between Tier 0 Baseline and Tier 1 Hardened SQL paths.</p>
+        </div>
+        <div class="col-auto">
+            <a asp-page="/Admin/LabHub" class="btn btn-outline-secondary rounded-pill btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Lab Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- The Laboratory Controls -->
+    <div class="card border-0 shadow-sm mb-5 rounded-4 overflow-hidden">
+        <div class="card-header bg-dark text-white py-3">
+            <h6 class="mb-0 fw-bold"><i class="bi bi-sliders me-2"></i>Laboratory Configuration</h6>
+        </div>
+        <div class="card-body p-4 bg-light">
+            <form method="get" class="row align-items-end g-3">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-uppercase text-muted">Execution Archetype</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="SearchType" id="tier0" value="Tier0" @(Model.SearchType == "Tier0" ? "checked" : "")>
+                        <label class="btn btn-outline-danger" for="tier0">
+                            <i class="bi bi-0-circle-fill me-1"></i> Tier 0 Baseline
+                        </label>
+                        
+                        <input type="radio" class="btn-check" name="SearchType" id="tier1" value="Tier1" @(Model.SearchType == "Tier1" ? "checked" : "")>
+                        <label class="btn btn-outline-success" for="tier1">
+                            <i class="bi bi-1-circle-fill me-1"></i> Tier 1 Hardened
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold text-uppercase text-muted">Test Query (Live Database)</label>
+                    <input type="text" name="Query" class="form-control" value="@Model.Query" placeholder="Enter patient name (e.g. ketki)..." required>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-dark w-100 fw-bold">Execute Clinical Query</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Query))
+    {
+        <!-- Performance Dashboard -->
+        <div class="row g-4 mb-5 animate__animated animate__fadeIn">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center p-4 h-100 @(Model.SearchType == "Tier0" ? "bg-light-danger" : "bg-light-success")">
+                    <h6 class="text-muted text-uppercase small mb-2">Measured Latency</h6>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <h1 class="fw-bold mb-0 @(Model.SearchType == "Tier0" ? "text-danger" : "text-success")">@Model.Latency ms</h1>
+                        @if (Model.IsCached)
+                        {
+                            <span class="ms-2 badge bg-success text-white x-small animate__animated animate__pulse animate__infinite">
+                                <i class="bi bi-lightning-fill"></i> CACHED
+                            </span>
+                        }
+                    </div>
+                    <p class="small text-muted mt-2 mb-0">Engine response time</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm text-center p-4 h-100">
+                    <h6 class="text-muted text-uppercase small mb-2">Rows Scanned / Found</h6>
+                    <h1 class="fw-bold mb-0">@Model.ResultCount</h1>
+                    <p class="small text-muted mt-2 mb-0">Record throughput</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100 bg-dark text-white">
+                    <h6 class="text-warning text-uppercase small mb-2">Optimizer Strategy</h6>
+                    <p class="small mb-0 text-white-50">@Model.ExecutionPlan</p>
+                    <div class="mt-auto pt-3">
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar @(Model.SearchType == "Tier0" ? "bg-danger" : "bg-success")" role="progressbar" style="width: @(Model.SearchType == "Tier0" ? "100%" : "5%")"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Grid -->
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Clinical ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.Results)
+                            {
+                                <tr>
+                                    <td><strong>@p.FirstName @p.LastName</strong></td>
+                                    <td>@p.ContactNumber</td>
+                                    <td>@p.Email</td>
+                                    <td><span class="badge bg-light text-dark">@p.UniqueId</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .bg-light-danger { background-color: rgba(220, 53, 69, 0.05); }
+    .bg-light-success { background-color: rgba(25, 135, 84, 0.05); }
+</style>

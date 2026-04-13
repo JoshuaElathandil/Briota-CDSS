@@ -1,0 +1,120 @@
+@page
+@model Briota.CDSS.Pages.Admin.Lab.StabilityModel
+@{
+    ViewData["Title"] = "System Stability Laboratory";
+}
+
+<style>
+    .error-console {
+        background-color: #1e1e1e;
+        color: #f1f1f1;
+        font-family: 'Consolas', monospace;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border-left: 5px solid #dc3545;
+        font-size: 0.85rem;
+    }
+    .glitch-text {
+        color: #dc3545;
+        font-weight: bold;
+        text-shadow: 2px 2px #ff000033;
+    }
+</style>
+
+<div class="container-fluid px-4 py-3">
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 fw-bold"><i class="bi bi-exclamation-octagon me-2 text-danger"></i>System Stability Lab</h1>
+            <p class="text-muted mb-0 small">Comparing the fragility of the "Implicit Trust" baseline against Production Resilience.</p>
+        </div>
+        <div class="col-auto">
+            <a asp-page="/Admin/LabHub" class="btn btn-outline-secondary rounded-pill btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Lab Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Toggle Control -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 p-4 bg-dark text-white">
+        <div class="row align-items-center">
+            <div class="col-sm-8">
+                <h5 class="fw-bold mb-1 text-danger">Reliability Protocol</h5>
+                <p class="mb-0 text-white-50 small">Toggle between Tier 0 (Fragmented/Fragile) and Tier 1 (Hardened/Defensive).</p>
+            </div>
+            <div class="col-sm-4">
+                <form method="get">
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="Mode" id="st0" value="Tier0" @(Model.Mode == "Tier0" ? "checked" : "") onchange="this.form.submit()">
+                        <label class="btn btn-outline-danger" for="st0">TIER 0: Implicit Access</label>
+                        
+                        <input type="radio" class="btn-check" name="Mode" id="st1" value="Tier1" @(Model.Mode == "Tier1" ? "checked" : "") onchange="this.form.submit()">
+                        <label class="btn btn-outline-success" for="st1">TIER 1: Defensive Access</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.DidCrash)
+    {
+        <!-- The "Crash" View (Baseline) -->
+        <div class="animate__animated animate__headShake">
+            <div class="text-center py-5">
+                <i class="bi bi-bug-fill text-danger display-1 mb-3"></i>
+                <h2 class="glitch-text">CRITICAL SYSTEM FAULT</h2>
+                <p class="text-muted">The clinical application has encountered an unhandled exception and was forced to terminate the request.</p>
+            </div>
+
+            <div class="error-console shadow-lg">
+                <p class="mb-2 text-warning fw-bold">System.NullReferenceException: Object reference not set to an instance of an object.</p>
+                <p class="small text-white-50">   at Briota.CDSS.Pages.Admin.Lab.StabilityModel.OnGet() in C:\...\Lab\Stability.cshtml.cs:line 42</p>
+                <p class="small text-white-50">   at Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure.ExecutorFactory.GenericTaskHandlerMethod.Execute()</p>
+                <hr class="bg-secondary" />
+                <p class="mb-0 text-danger small"><i class="bi bi-terminal me-2"></i>PROCESS_TERMINATED_BY_UNHANDLED_EXCEPTION</p>
+            </div>
+
+            <div class="mt-4 p-4 border rounded-4 bg-light">
+                <h6 class="fw-bold"><i class="bi bi-shield-slash me-2 text-danger"></i>Dr. Quinn's Diagnosis:</h6>
+                <p class="mb-0 small text-muted">AHA! The baseline prototype assumes clinical data is always present. In a real-world clinic, patient records can be incomplete or relations (like assigned technicians) can be deleted. Without defensive guardrails, a single missing data point causes a <strong>Cascade Failure</strong>.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- The "Resilient" View (Hardened) -->
+        <div class="animate__animated animate__fadeIn">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden border-start border-success border-5">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0 text-success"><i class="bi bi-person-badge-fill me-2"></i>Hardened Clinical View</h5>
+                        <span class="badge bg-success-soft text-success">Resilient UI Active</span>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Patient Name</label>
+                            <p class="fs-5 fw-bold mb-0">@(Model.SamplePatient?.FirstName ?? "Unassigned (Resilient Fallback)")</p>
+                            <span class="small text-muted">Handled via <code>?? "Unassigned"</code></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted text-uppercase fw-bold mb-1">Clinic Status</label>
+                            <div class="d-flex align-items-center">
+                                <div class="p-1 bg-success rounded-circle me-2" style="width: 10px; height: 10px;"></div>
+                                <p class="mb-0 small text-success fw-bold">System Online & Stable</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 p-4 bg-light rounded-4">
+                        <h6 class="fw-bold"><i class="bi bi-shield-fill-check me-2 text-success"></i>Winston's Architectural Verdict:</h6>
+                        <p class="mb-0 small text-muted">By implementing **Defensive Guardrails**, we ensure the clinical command center remains operational even when data is imperfect. The platform is now built for the **Realities of Clinical Chaos**, not just the 'happy path'.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
+</style>

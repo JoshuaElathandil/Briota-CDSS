@@ -1,0 +1,107 @@
+@page "{id:int}"
+@model Briota.CDSS.Pages.Patients.DetailsModel
+@{
+    ViewData["Title"] = "Clinical Review - " + Model.Patient?.FirstName;
+    var latestCkd = Model.CkdHistory.FirstOrDefault();
+    var latestCopd = Model.CopdHistory.FirstOrDefault();
+}
+
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a asp-page="./Index">Patients</a></li>
+                    <li class="breadcrumb-item active">Clinical Review</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">@Model.Patient?.FirstName @Model.Patient?.LastName</h1>
+            <span class="text-muted"><i class="bi bi-person-badge"></i> Patient ID: @Model.Patient?.UniqueId</span>
+        </div>
+        <div class="text-end">
+            <button class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer"></i> Print Report</button>
+            <a class="btn btn-primary" href="#"><i class="bi bi-plus-circle"></i> New Assessment</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Summary Cards -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-primary">
+                <div class="card-body">
+                    <h6 class="text-muted small text-uppercase fw-bold">Latest Health Score</h6>
+                    <div class="h2 mb-0">@(latestCkd?.HealthScore ?? 0)</div>
+                    <div class="small @(latestCkd?.RiskLevel > 2 ? "text-danger" : "text-success")">
+                        <i class="bi bi-activity"></i> Risk Level: @(latestCkd?.RiskLevel ?? 0)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-muted small text-uppercase fw-bold">Blood Pressure</h6>
+                    <div class="h2 mb-0">@(latestCkd?.SystollicBloodPressure ?? 0)/@(latestCkd?.DistolicBloodPressure ?? 0)</div>
+                    <div class="small text-muted">mmHg</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-warning">
+                <div class="card-body">
+                    <h6 class="text-muted small text-uppercase fw-bold">BMI (Latest)</h6>
+                    <div class="h2 mb-0">@(latestCkd != null && latestCkd.Height > 0 ? (latestCkd.Weight / Math.Pow(latestCkd.Height/100, 2)).ToString("F1") : "N/A")</div>
+                    <div class="small text-muted">@latestCkd?.Weight kg / @latestCkd?.Height cm</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-success">
+                <div class="card-body">
+                    <h6 class="text-muted small text-uppercase fw-bold">Last Screening</h6>
+                    <div class="h5 mb-0">@(latestCkd?.CreatedDate?.ToString("dd MMM yyyy") ?? "N/A")</div>
+                    <div class="small text-muted">@(latestCkd?.Creator?.FirstName ?? "Unassigned")</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Clinical Details Tabs -->
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="card-title mb-0">Disease Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 border-0">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1 text-primary">Chronic Kidney Disease</h6>
+                                <span class="badge @(latestCkd != null ? "bg-success" : "bg-light text-muted")">@(latestCkd != null ? "Active" : "Not Found")</span>
+                            </div>
+                            <small class="text-muted">ACR Value: @latestCkd?.ACRValue</small>
+                        </div>
+                        <div class="list-group-item px-0 border-0 mt-2">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1 text-primary">Respiratory (COPD)</h6>
+                                <span class="badge @(latestCopd != null ? "bg-success" : "bg-light text-muted")">@(latestCopd != null ? "Active" : "Not Found")</span>
+                            </div>
+                            <small class="text-muted">CAT Score: @latestCopd?.CAT_TotalScore | Zone: @latestCopd?.CDSSZone</small>
+                        </div>
+                    </div>
+                    
+                    <hr />
+                    
+                    <h6 class="small text-uppercase fw-bold text-muted mb-3">Diagnostic Notes</h6>
+                    <p class="small text-dark">
+                        @(latestCkd?.DoctorNotes ?? "No notes available for this patient.")
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

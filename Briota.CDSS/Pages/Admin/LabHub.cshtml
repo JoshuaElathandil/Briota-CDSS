@@ -1,0 +1,90 @@
+@page
+@model Briota.CDSS.Pages.Admin.LabHubModel
+@{
+    ViewData["Title"] = "Clinical UX Laboratory Hub";
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="row align-items-center mb-4 text-white p-4 rounded-4 shadow-lg" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+        <div class="col-auto">
+            <div class="bg-primary p-3 rounded-circle shadow-sm">
+                <i class="bi bi-flask fs-2"></i>
+            </div>
+        </div>
+        <div class="col">
+            <h1 class="h3 mb-0 fw-bold">Clinical UX Laboratories</h1>
+            <p class="text-light text-opacity-75 mb-0 small">Experience real-world behavioral differences between Baseline (Tier 0) and Hardened (Tier 1) archetypes.</p>
+        </div>
+        <div class="col-auto text-end">
+            <a asp-page="/Admin/Index" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="bi bi-shield-lock me-1"></i> Admin Console
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-warning border-0 shadow-sm rounded-3 mb-5 d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-warning"></i>
+        <div>
+            <h6 class="fw-bold mb-1">Authentic Execution Path Engagement</h6>
+            <p class="mb-0 small text-muted">Unlike simulations, these laboratories trigger the **actual unoptimized logic** vs **hardened logic** paths used in the project's evolution.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Search Performance Lab -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 card-hover overflow-hidden rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="icon-circle bg-primary bg-opacity-10 text-primary mb-4 mx-auto" style="width: 70px; height: 70px;">
+                        <i class="bi bi-lightning-charge fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold fs-5">Search Performance Lab</h5>
+                    <p class="text-muted small mb-4">Compare the actual latency of unindexed <code>Contains</code> scans vs. indexed <code>StartsWith</code> execution over 23,000 records.</p>
+                    <a asp-page="/Admin/Lab/Search" class="btn btn-primary w-100 rounded-pill">Execute Search Comparison</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concurrency Laboratory -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 card-hover overflow-hidden rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="icon-circle bg-success bg-opacity-10 text-success mb-4 mx-auto" style="width: 70px; height: 70px;">
+                        <i class="bi bi-shield-check fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold fs-5">Clinical Concurrency Lab</h5>
+                    <p class="text-muted small mb-4">Witness the real impact of silent data overwrites (Tier 0) vs. our versioned conflict shield (Tier 1) for clinical integrity.</p>
+                    <a asp-page="/Admin/Lab/Concurrency" class="btn btn-success w-100 rounded-pill">Test Transaction Safety</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Stability Lab -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 card-hover overflow-hidden rounded-4">
+                <div class="card-body p-4 text-center">
+                    <div class="icon-circle bg-danger bg-opacity-10 text-danger mb-4 mx-auto" style="width: 70px; height: 70px;">
+                        <i class="bi bi-exclamation-octagon fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold fs-5">System Stability Lab</h5>
+                    <p class="text-muted small mb-4">Experience a real <strong>System 500 Crash</strong> triggered by fragile data access vs. our hardened resilient fallback UI.</p>
+                    <a asp-page="/Admin/Lab/Stability" class="btn btn-danger w-100 rounded-pill">Trigger Stability Test</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-circle {
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-hover:hover {
+        transform: translateY(-8px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    }
+</style>
