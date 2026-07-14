@@ -19,6 +19,7 @@ artifacts/
 *.png
 *.jpg
 *.jpeg
+!Screenshots/**
 *.log
 *.bak
 *.sql
